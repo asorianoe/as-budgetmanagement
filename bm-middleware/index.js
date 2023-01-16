@@ -14,7 +14,7 @@ app.use(cookies());
 app.use(express.json());
 
 app.use(freeRoutes);
-app.use(guard);
+//app.use(guard);
 
 oracle
   .start()
