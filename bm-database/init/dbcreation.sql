@@ -148,7 +148,7 @@ END API_TOKEN;
 INSERT INTO bmuser.bm_currency (curr_id, curr_desc, curr_usd_exc_rate) VALUES ('USD', 'U.S Dollar', '1');
 INSERT INTO bmuser.bm_currency (curr_id, curr_desc, curr_usd_exc_rate) VALUES ('COP', 'Colombiam Peso', 4729.76);
 INSERT INTO bmuser.bm_currency (curr_id, curr_desc, curr_usd_exc_rate) VALUES ('MEX', 'Mexican Peso', 19.39);
-INSERT INTO bmuser.bm_currency (curr_id, curr_desc, curr_usd_exc_rate) VALUES ('CRC', 'Costa Rican Colón', 581.85);
+INSERT INTO bmuser.bm_currency (curr_id, curr_desc, curr_usd_exc_rate) VALUES ('CRC', 'Costa Rican Colon', 581.85);
 INSERT INTO bmuser.bm_currency (curr_id, curr_desc, curr_usd_exc_rate) VALUES ('EUR', 'Euro', 0.94);
 INSERT INTO bmuser.bm_currency (curr_id, curr_desc, curr_usd_exc_rate) VALUES ('GBP', 'Pound sterling', 0.83);
 
@@ -166,9 +166,6 @@ INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('O
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('OTI', 'Other Income', 'EXP');
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type, tx_visible) VALUES ('TRI', 'Tranfer Increase', 'INC', 'N');
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type, tx_visible) VALUES ('TRE', 'Tranfer Expense', 'EXP', 'N');
-
-INSERT INTO bmuser.bm_user (user_id, user_mail, user_pass, user_token, user_first_name, user_last_name) VALUES ('asoriano', 'asoriano', 'NoToken', 'Alex', 'Soriano');
-
 
 COMMIT;
 
