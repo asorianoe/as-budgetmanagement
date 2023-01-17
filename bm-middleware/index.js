@@ -7,6 +7,7 @@ const cookies = require('cookie-parser');
 const guard = require('./src/guard/Guard');
 
 const freeRoutes = require('./src/routes/Free');
+const secureRoutes = require('./src/routes/Secure');
 
 
 app.use(cors({ origin: true, credentials: true }));
@@ -14,7 +15,8 @@ app.use(cookies());
 app.use(express.json());
 
 app.use(freeRoutes);
-//app.use(guard);
+app.use(guard);
+app.use(secureRoutes);
 
 oracle
   .start()

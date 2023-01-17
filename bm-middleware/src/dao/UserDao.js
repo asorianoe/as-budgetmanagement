@@ -21,7 +21,7 @@ module.exports.login = ({ userId, password }) => {
       last_name: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
     };
     const SQL_LOGIN_PERSON = `UPDATE bm_user SET
-                                user_token = api_token(TO_CHAR(SYSDATE, 'DD-MM-YYYY HH24:MI:SS') || :password), mod_date = sysdate
+                                user_token = api_token(TO_CHAR(SYSDATE, 'DD-MM-YYYY HH24:MI:SS') || :password), UPDATE_DATE = sysdate
                                 WHERE user_id = :userId
                             RETURNING user_token, user_first_name, user_last_name INTO :person_token, :first_name, :last_name`;
     return pool(SQL_LOGIN_PERSON, bindings, { autoCommit: true });
@@ -31,8 +31,8 @@ module.exports.verifyPersonToken = ({ person_token }) => {
     const bindings = { person_token };
     const SQL_SELECT_PERSON = `SELECT
                                         user_id AS "userId",
-                                        FIRST_NAME AS "first_name",
-                                        LAST_NAME AS "last_name"
+                                        user_first_name AS "first_name",
+                                        user_last_name AS "last_name"
                                     FROM bm_user
                                     WHERE 
                                         user_token = :person_token`;
@@ -41,7 +41,7 @@ module.exports.verifyPersonToken = ({ person_token }) => {
   
 module.exports.hashpassword = ({ userId }) => {
     const bindings = { userId };
-    const SQL_HASH_PASSWORD = `SELECT PASSWORD FROM bm_user WHERE user_id = :userId`;
+    const SQL_HASH_PASSWORD = `SELECT user_pass PASSWORD FROM bm_user WHERE user_id = :userId`;
     return pool(SQL_HASH_PASSWORD, bindings);
 };
   

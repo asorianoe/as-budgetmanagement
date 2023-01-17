@@ -46,7 +46,7 @@ module.exports.loginPerson = async (req, res, next) => {
     if (hashpasswordrow.length > 0) {
       const hashpassword = hashpasswordrow[0]['PASSWORD'];
       if (bcrypt.compareSync(args.password, hashpassword)) {
-        args = { email: args.userId, password: hashpassword };
+        args = { userId: args.userId, password: hashpassword };
         const { outBinds } = await UserDao.login(args);
         const { person_token, first_name, last_name } = outBinds;
         return res

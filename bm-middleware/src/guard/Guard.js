@@ -9,7 +9,7 @@ const guard = async (req, res, next) => {
   const person_token = req.headers.authorization.split('Bearer ')[1];
   try {
     const args = { person_token };
-    const { rows } = await UserDao.verifyPersonToken(person_token);
+    const { rows } = await UserDao.verifyPersonToken(args);
     if (rows.length > 0) {
       req.person = rows[0];
       return next();
