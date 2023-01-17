@@ -1,16 +1,20 @@
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import Container from 'react-bootstrap/Container';
+
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Routes ,Route} from 'react-router-dom';
+
+import AuthProvider from './context/AuthProvider';
 import Dashboard from './Components/Dashboard';
 import Transaction from './Components/Transaction';
+import Register from './Components/Register';
 
 
 function App() {
   return (
-    <div>
+    <AuthProvider>
       <div>
         <Navbar bg="primary" variant="dark">
           <Container>
@@ -20,6 +24,7 @@ function App() {
               <Nav.Link href="/Transaction">New Transaction</Nav.Link>
               <Nav.Link href="/History">Transaction History</Nav.Link>
               <Nav.Link href="/Accounts">Bank Account</Nav.Link>
+              <Nav.Link href="/Register">Register</Nav.Link>
             </Nav>
           </Container>
         </Navbar>
@@ -28,13 +33,14 @@ function App() {
         <Routes>                
              <Route path='Dashboard' element={<Dashboard/>}/>  
              <Route path='/Transaction' element={<Transaction/>} />  
+             <Route path='/Register' element={<Register/>} />  
              <Route path='/' element={<Dashboard/>} />            
               <Route render={function () {
                 return <p>Not found</p>
               }} />
         </Routes>
       </div>
-    </div>
+    </AuthProvider>
 
 
   );
