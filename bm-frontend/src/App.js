@@ -10,6 +10,7 @@ import AuthProvider from './context/AuthProvider';
 import Dashboard from './Components/Dashboard';
 import Transaction from './Components/Transaction';
 import Register from './Components/Register';
+import Login from './Components/Login'
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
               <Nav.Link href="/History">Transaction History</Nav.Link>
               <Nav.Link href="/Accounts">Bank Account</Nav.Link>
               <Nav.Link href="/Register">Register</Nav.Link>
+              <Nav.Link href="/Login">Login</Nav.Link>
             </Nav>
           </Container>
         </Navbar>
@@ -34,6 +36,7 @@ function App() {
              <Route path='Dashboard' element={<Dashboard/>}/>  
              <Route path='/Transaction' element={<Transaction/>} />  
              <Route path='/Register' element={<Register/>} />  
+             <Route path='/Login' element={<Login/>} />  
              <Route path='/' element={<Dashboard/>} />            
               <Route render={function () {
                 return <p>Not found</p>
