@@ -5,26 +5,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-import { getCategories, getCurrencies, saveTransaction} from "../service/AccountsService";
+import { getCurrencies, saveAccount} from "../service/AccountsService";
 
-function Transaction() {
-    const {accId, txType} = useParams();
+function CreateAccount() {
     const [error, setError] = useState('');
-    const [categories, setCategories] = useState([]);
     const [currencies, setCurrencies] = useState([]);
     const [disabledSubmit, setDisableSubmit] = useState(false);
     const navigate = useNavigate();
-    const categorRef = useRef();
-    const ammountRef = useRef();
+    const aliasRef = useRef();
+    const initianBalanceRef = useRef();
     const currencyRef = useRef();
 
     useEffect(() => {
-        const getTypeCategories = async () => {
-          const categories = await getCategories(txType);
-          console.log(categories);
-          setCategories(categories.data);
-        };
-        getTypeCategories();
         const getAllCurrencies = async () => {
           const currencies = await getCurrencies();
           console.log(currencies);
@@ -39,8 +31,8 @@ function Transaction() {
       try {
         setError('');
         setDisableSubmit(true);
-        let finalAmmount =ammountRef.current.value * (txType=="INC"? 1:-1);
-        await saveTransaction(accId,txType,categorRef.current.value,finalAmmount,currencyRef.current.value);
+        
+        await saveAccount(aliasRef.current.value,initianBalanceRef.current.value,currencyRef.current.value);
         return navigate('/Dashboard', { replace: true });
       } catch (e) {
         console.log(e);
@@ -57,7 +49,7 @@ function Transaction() {
       <Container>
         <Row style={{ marginTop:"30Px"}}>
           <Col>
-          <h2>Register {txType =="INC"?"Income":"Expense"}</h2>
+          <h2>Create new Account</h2>
           </Col>
           <Col style={{ textAlign: "center" }}>
           </Col>
@@ -68,20 +60,16 @@ function Transaction() {
               <Card.Body>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form onSubmit={handleSubmit}>
-                  <Form.Group id="category">
-                    <Form.Label>Category</Form.Label>
-                    <Form.Select ref={categorRef}>
-                      {categories.map(cat=>{return(
-                         <option value={cat.CATEGORY} key={cat.CATEGORY}>{cat.DESCRIPTION}</option>
-                      )})}
-                    </Form.Select>
+                  <Form.Group id="alias">
+                    <Form.Label>Account Alias:</Form.Label>
+                    <Form.Control type="text"  ref={aliasRef} required />
                   </Form.Group>
                   <Form.Group id="ammount">
-                    <Form.Label>Ammount</Form.Label>
-                    <Form.Control type="text" placeholder="0.00"  ref={ammountRef} required />
+                    <Form.Label>Initial Balance</Form.Label>
+                    <Form.Control type="text" placeholder="0.00"  ref={initianBalanceRef} required />
                   </Form.Group>
                   <Form.Group id="currency">
-                    <Form.Label>Currency</Form.Label>
+                    <Form.Label>Account Currency</Form.Label>
                     <Form.Select ref={currencyRef}>
                       {currencies.map(cur=>{return(
                          <option value={cur.CURRENCY} key={cur.CURRENCY}>{cur.DESCRIPTION}</option>
@@ -107,4 +95,4 @@ function Transaction() {
     );
   }
   
-  export default Transaction;
+  export default CreateAccount;

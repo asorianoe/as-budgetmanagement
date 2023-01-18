@@ -162,8 +162,8 @@ INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('F
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('ENT', 'Entretaining', 'EXP');
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('SAL', 'Salary', 'INC');
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('SLS', 'Sales', 'INC');
-INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('OTE', 'Other Expenses', 'EXP');
-INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('OTI', 'Other Income', 'EXP');
+INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('OTE', 'Other', 'EXP');
+INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('OTI', 'Other', 'INC');
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type, tx_visible) VALUES ('TRI', 'Tranfer Increase', 'INC', 'N');
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type, tx_visible) VALUES ('TRE', 'Tranfer Expense', 'EXP', 'N');
 

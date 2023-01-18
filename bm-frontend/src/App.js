@@ -11,6 +11,7 @@ import Dashboard from './Components/Dashboard';
 import Transaction from './Components/Transaction';
 import Register from './Components/Register';
 import Login from './Components/Login'
+import CreateAccount from './Components/CreateAccount';
 
 
 function App() {
@@ -35,6 +36,8 @@ function App() {
         <Routes>                
              <Route path='Dashboard' element={<Dashboard/>}/>  
              <Route path='/Transaction' element={<Transaction/>} />  
+             <Route path='/Transaction/:accId/:txType' element={<Transaction/>} />  
+             <Route path='/CreateAccount' element={<CreateAccount/>} />  
              <Route path='/Register' element={<Register/>} />  
              <Route path='/Login' element={<Login/>} />  
              <Route path='/' element={<Dashboard/>} />            
