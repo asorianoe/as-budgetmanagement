@@ -2,7 +2,6 @@
 import { useCookies } from 'react-cookie';
 
 export const getAccounts = async () => {
-    console.log('Trying');
     const cookie = getCookie('auth_token');
     const response = await fetch(
     `${process.env.REACT_APP_BACKEND_BASE_URL}/account`,
