@@ -44,30 +44,40 @@ module.exports.saveTransaction = async (req, res, next) => {
   }
 };
 
-
-/*
-module.exports.createCategory = async (req, res, next) => {
+module.exports.saveTransaction = async (req, res, next) => {
+  var accId = req.params.accId;
   const args = {
-    person: req.person.person,
-    name: req.body.name,
-    description: req.body.description,
-  };
+                  accId:req.params.accId,
+                  txType:req.body.txType, 
+                  txCat:req.body.txCat, 
+                  txAmmount:req.body.txAmmount, 
+                  txCurrency:req.body.txCurrency
+                };
   try {
-    await accountDao.create(args);
-    res.status(200).json({ messsage: 'Category created successfully!' });
+    const { rows } = await accountDao.saveTransaction(args);
+    res.status(200).json({ data: rows });
   } catch (error) {
     res.status(400).json({ messsage: error });
   }
 };
 
-module.exports.getCategory = async (req, res, next) => {
-  const args = { person: req.person.person, category: Number(req.params.id) };
+module.exports.saveTranfer = async (req, res, next) => {
+  var accId = req.params.accId;
+  const args = {
+                  accId:req.body.accId,
+                  toAccId:req.body.toAccId, 
+                  ammount:req.body.ammount, 
+                  currency:req.body.currency
+                };
   try {
-    const { rows } = await accountDao.findById(args);
+    const { rows } = await accountDao.saveTransfer(args);
     res.status(200).json({ data: rows });
   } catch (error) {
     res.status(400).json({ messsage: error });
   }
-};*/
+};
+
+
+
 
 

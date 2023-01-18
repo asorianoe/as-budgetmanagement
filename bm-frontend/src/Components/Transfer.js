@@ -5,32 +5,43 @@ import { useNavigate } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-import { getCategories, getCurrencies, saveTransaction} from "../service/AccountsService";
+import { getAccounts, getCurrencies, saveTranfer} from "../service/AccountsService";
 
-function Transaction() {
-    const {accId, txType,curr} = useParams();
+function Transfer() {
+    const {accId} = useParams();
     const [error, setError] = useState('');
-    const [categories, setCategories] = useState([]);
+    const [mainAccount, setMainAccount] = useState('');
+    const [mainAccountCurr, setMainAccountCurr] =  useState('');
+    const [accounts, setAccounts] = useState([]);
     const [currencies, setCurrencies] = useState([]);
     const [disabledSubmit, setDisableSubmit] = useState(false);
     const navigate = useNavigate();
-    const categorRef = useRef();
+    const transferToRef = useRef();
     const ammountRef = useRef();
     const currencyRef = useRef();
 
     useEffect(() => {
-        const getTypeCategories = async () => {
-          const categories = await getCategories(txType);
-          console.log(categories);
-          setCategories(categories.data);
-        };
-        getTypeCategories();
         const getAllCurrencies = async () => {
           const currencies = await getCurrencies();
           console.log(currencies);
           setCurrencies(currencies.data);
         };
         getAllCurrencies();
+
+        const getAllAccounts = async () => {
+          const accounts = await getAccounts();
+          console.log(accounts);
+          const filtered = accounts.data.filter(account => {
+            return !(account.accountId == accId);
+          });
+          setAccounts(filtered);
+          const mainAccountArr = accounts.data.filter(account => {
+            return account.accountId ==accId;
+          }); 
+          setMainAccount(mainAccountArr[0].ALIAS);
+          setMainAccountCurr(mainAccountArr[0].CURRENCY);
+        };
+        getAllAccounts();
     }, []);
     
 
@@ -39,8 +50,7 @@ function Transaction() {
       try {
         setError('');
         setDisableSubmit(true);
-        let finalAmmount =ammountRef.current.value * (txType==="INC"? 1:-1);
-        await saveTransaction(accId,txType,categorRef.current.value,finalAmmount,currencyRef.current.value);
+        await saveTranfer(accId,transferToRef.current.value,ammountRef.current.value,currencyRef.current.value);
         return navigate('/Dashboard', { replace: true });
       } catch (e) {
         console.log(e);
@@ -57,9 +67,11 @@ function Transaction() {
       <Container>
         <Row style={{ marginTop:"30Px"}}>
           <Col>
-          <h2>Register {txType ==="INC"?"Income":"Expense"}</h2>
+          {mainAccount && <h2>Transfering from  {mainAccount} ({mainAccountCurr})</h2>}
+          
           </Col>
           <Col style={{ textAlign: "center" }}>
+          
           </Col>
         </Row>
         <Row>
@@ -68,11 +80,11 @@ function Transaction() {
               <Card.Body>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form onSubmit={handleSubmit}>
-                  <Form.Group id="category">
-                    <Form.Label>Category</Form.Label>
-                    <Form.Select ref={categorRef}>
-                      {categories.map(cat=>{return(
-                         <option value={cat.CATEGORY} key={cat.CATEGORY}>{cat.DESCRIPTION}</option>
+                  <Form.Group id="toAccount">
+                    <Form.Label>Transfer To</Form.Label>
+                    <Form.Select ref={transferToRef}>
+                      {accounts.map(acc=>{return(
+                         <option value={acc.accountId} key={acc.accountId}>{acc.ALIAS} ({acc.CURRENCY})</option>
                       )})}
                     </Form.Select>
                   </Form.Group>
@@ -82,7 +94,7 @@ function Transaction() {
                   </Form.Group>
                   <Form.Group id="currency">
                     <Form.Label>Currency</Form.Label>
-                    <Form.Select ref={currencyRef} value={curr}>
+                    <Form.Select ref={currencyRef}>
                       {currencies.map(cur=>{return(
                          <option value={cur.CURRENCY} key={cur.CURRENCY}>{cur.DESCRIPTION}</option>
                       )})}
@@ -107,4 +119,4 @@ function Transaction() {
     );
   }
   
-  export default Transaction;
+  export default Transfer;

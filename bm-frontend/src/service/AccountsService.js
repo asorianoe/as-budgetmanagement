@@ -54,6 +54,28 @@ export const saveAccount = async (alias, initialBalance, currency) => {
   return categories;
 };
 
+export const saveTranfer = async (accId, toAccId, ammount, currency) => {
+  const cookie = getCookie('auth_token');
+  const response = await fetch(
+    `${process.env.REACT_APP_BACKEND_BASE_URL}/account/tranfer`,
+  {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ` +cookie,
+      },
+      body: JSON.stringify({
+              accId,
+              toAccId,
+              ammount,
+              currency
+            }),
+  }
+  );
+  const categories = await response.json();
+  return categories;
+};
+
 export const saveTransaction = async (accId, txType, txCat, txAmmount, txCurrency) => {
   const cookie = getCookie('auth_token');
   const response = await fetch(

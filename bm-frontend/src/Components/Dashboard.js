@@ -22,11 +22,15 @@ function Dashboard() {
   }, []);
 
 
-  function handleIncrease(id) {
-    navigate("/Transaction/"+id+"/INC");
+  function handleIncrease(id,curr) {
+    navigate("/Transaction/"+id+"/INC/"+curr);
   }
-  function handleExpense(id) {
-    navigate("/Transaction/"+id+"/EXP");
+  function handleExpense(id,curr) {
+    navigate("/Transaction/"+id+"/EXP/"+curr);
+  }
+
+  function handleTransfer(id) {
+    navigate("/Transfer/"+id);
   }
 
   function handleCreateAccount() {
@@ -62,9 +66,9 @@ function Dashboard() {
                 <td style={{ textAlign: "right" }}>{account.BALANCE} {account.CURRENCY}</td>
                 <td>{format(parseISO(account.modified), "MMMM do, yyyy HH:mma")}</td>
                 <td> 
-                    <Button variant="success" onClick={() => handleIncrease(account.accountId)}><BsArrowUpCircle/></Button>
-                    <Button variant="danger"  onClick={() => handleExpense(account.accountId)}><BsArrowDownCircle/></Button>
-                    <Button variant="warning"><BsArrowRepeat/></Button>
+                    <Button variant="success" onClick={() => handleIncrease(account.accountId,account.CURRENCY)}><BsArrowUpCircle/></Button>
+                    <Button variant="danger"  onClick={() => handleExpense (account.accountId,account.CURRENCY)}><BsArrowDownCircle/></Button>
+                    <Button variant="warning" onClick={() => handleTransfer (account.accountId)}><BsArrowRepeat/></Button>
                 </td>
               </tr>
             )})}

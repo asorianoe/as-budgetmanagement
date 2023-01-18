@@ -128,8 +128,8 @@ END;
 CREATE OR REPLACE PROCEDURE bmuser.bm_transfer 
 	(from_acc IN NUMBER, to_acc IN NUMBER, amount IN NUMBER, currency IN VARCHAR2) AS 
 BEGIN
-  INSERT INTO bmuser.bm_transaction (account_id, tx_type, tx_cat, tx_org_amount, tx_currency) VALUES (from_acc, 'INC', 'OTH',-1*amount, currency);
-	INSERT INTO bmuser.bm_transaction (account_id, tx_type, tx_cat, tx_org_amount, tx_currency) VALUES (to_acc, 'EXP', 'OTH', amount, currency);
+  INSERT INTO bmuser.bm_transaction (account_id, tx_type, tx_cat, tx_org_amount, tx_currency) VALUES (from_acc, 'EXP', 'TRE',-1*amount, currency);
+	INSERT INTO bmuser.bm_transaction (account_id, tx_type, tx_cat, tx_org_amount, tx_currency) VALUES (to_acc, 'INC', 'TRI', amount, currency);
 END bm_transfer;
 /
 
@@ -157,7 +157,7 @@ INSERT INTO bmuser.bm_transactions_type (tx_type, tx_type_desc) VALUES ('EXP', '
 INSERT INTO bmuser.bm_transactions_type (tx_type, tx_type_desc) VALUES ('INC', 'Income');
 INSERT INTO bmuser.bm_transactions_type (tx_type, tx_type_desc) VALUES ('TRA', 'Transfer');
 
-INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('HOU', 'Hosing ', 'EXP');
+INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('HOU', 'Rent ', 'EXP');
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('FOO', 'Food', 'EXP');
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('ENT', 'Entretaining', 'EXP');
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('SAL', 'Salary', 'INC');
