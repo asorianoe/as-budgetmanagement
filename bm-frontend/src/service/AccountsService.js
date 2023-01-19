@@ -17,10 +17,15 @@ export const getAccounts = async () => {
     return categories;
 };
 
-export const getCategories = async (txType) => {
+export const getCategories = async (txType, txVisible) => {
+  if (cleanParam(txVisible)===''){
+    txVisible='Y';
+  }else if (cleanParam(txVisible)==='ALL'){
+    txVisible='';
+  }
   const cookie = getCookie('auth_token');
   const response = await fetch(
-  `${process.env.REACT_APP_BACKEND_BASE_URL}/categories?txType=`+txType,
+  `${process.env.REACT_APP_BACKEND_BASE_URL}/categories?txType=`+cleanParam(txType)+'&txVisible='+cleanParam(txVisible),
   {
       method: 'GET',
       headers: {
@@ -98,6 +103,23 @@ export const saveTransaction = async (accId, txType, txCat, txAmmount, txCurrenc
   return categories;
 };
 
+export const getTransactions  = async (accId,txCat,txDate,limit) => {
+  const cookie = getCookie('auth_token');
+  var query = 'accId='+cleanParam(accId)+'&txCat='+cleanParam(txCat)+'&txDate='+cleanParam(txDate)+'&limit='+cleanParam(limit); 
+  const response = await fetch(
+  `${process.env.REACT_APP_BACKEND_BASE_URL}/tranfer?`+ query,
+  {
+      method: 'GET',
+      headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ` +cookie,
+      },
+  }
+  );
+  const categories = await response.json();
+  return categories;
+};
+
 export const getCurrencies  = async () => {
   const cookie = getCookie('auth_token');
   const response = await fetch(
@@ -114,7 +136,28 @@ export const getCurrencies  = async () => {
   return categories;
 };
 
+export const getTypes  = async () => {
+  const cookie = getCookie('auth_token');
+  const response = await fetch(
+  `${process.env.REACT_APP_BACKEND_BASE_URL}/types`,
+  {
+      method: 'GET',
+      headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ` +cookie,
+      },
+  }
+  );
+  const categories = await response.json();
+  return categories;
+};
 
+function cleanParam(param){
+  if (param == undefined || param == null){
+    return '';
+  }
+  return param;  
+}
 
 function getCookie(cname) {
     let name = cname + "=";

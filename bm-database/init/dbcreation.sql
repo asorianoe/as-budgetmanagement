@@ -155,7 +155,6 @@ INSERT INTO bmuser.bm_currency (curr_id, curr_desc, curr_usd_exc_rate) VALUES ('
 
 INSERT INTO bmuser.bm_transactions_type (tx_type, tx_type_desc) VALUES ('EXP', 'Expense');
 INSERT INTO bmuser.bm_transactions_type (tx_type, tx_type_desc) VALUES ('INC', 'Income');
-INSERT INTO bmuser.bm_transactions_type (tx_type, tx_type_desc) VALUES ('TRA', 'Transfer');
 
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('HOU', 'Rent ', 'EXP');
 INSERT INTO bmuser.bm_transactions_cat (tx_cat, tx_cat_desc, tx_type) VALUES ('FOO', 'Food', 'EXP');

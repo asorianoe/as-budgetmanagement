@@ -3,7 +3,7 @@ const { pool } = require('../utils/oracle');
 module.exports.fetchAll = ({ userId }) => {
   const bindings = { userId };
   const SQL_SELECT_CATEGORIES = `SELECT
-                                    account_id "accountId",	alias ,	to_char(balance,'fm999G999G999G999D00') balance,	currency,	update_date "modified"
+                                    account_id "accountId",	alias ,	to_char(balance,'fm999G999G999G990D00') balance,	currency,	update_date "modified"
                                   FROM
                                     bm_account
                                   WHERE
@@ -34,5 +34,28 @@ module.exports.saveTransfer = ({ accId,toAccId,ammount, currency}) => {
   const bindings = {accId,toAccId,ammount, currency};
   console.log(bindings);
   const SQL_SELECT_CATEGORIES = `CALL bm_transfer(:accId, :toAccId, :ammount, :currency)`;
+  return pool(SQL_SELECT_CATEGORIES, bindings,{ autoCommit: true });
+};
+
+
+module.exports.getTransfers = ({ accId,txCat,txDate, limitRows}) => {
+  const bindings = {accId,txCat,txDate, limitRows};
+  const SQL_SELECT_CATEGORIES = `SELECT * FROM (
+                                      SELECT
+                                        tx.tx_id, tx.account_id accountId, ac.alias, ac.currency exg_curr,
+                                        tt.tx_type_desc type, tc.tx_cat_desc, to_char(tx.tx_org_amount,'fm999G999G999G990D00') org_amount, 
+                                        tx.tx_currency, to_char(tx.tx_exg_amount,'fm999G999G999G990D00') exg_amount, tx.tx_date
+                                      FROM
+                                        bm_transaction tx
+                                        inner join BM_ACCOUNT ac on (ac.account_id = tx.account_id)
+                                        inner join bm_transactions_type tt on (tt.tx_type = tx.tx_type)
+                                        inner join bm_transactions_cat tc on (tx.tx_cat = tc.tx_cat)
+                                      Where 
+                                        tx.account_id = nvl(:accId,tx.account_id)
+                                        AND tx.tx_cat = nvl(:txCat,tx.tx_cat)
+                                        AND to_char(tx.tx_date,'YYYYMMdd') = nvl(:txDate,to_char(tx.tx_date,'YYYYMMdd'))
+                                      order by tx.tx_date desc	
+                                    )
+                                    WHERE ROWNUM <= nvl(:limitRows,ROWNUM)`;
   return pool(SQL_SELECT_CATEGORIES, bindings,{ autoCommit: true });
 };

@@ -77,6 +77,21 @@ module.exports.saveTranfer = async (req, res, next) => {
   }
 };
 
+module.exports.getTranfers = async (req, res, next) => {
+  var accId = req.params.accId;
+  const args = {
+                  accId:req.query.accId,
+                  txCat:req.query.txCat, 
+                  txDate:req.query.txDate, 
+                  limitRows:req.query.limit
+                };
+  try {
+    const { rows } = await accountDao.getTransfers(args);
+    res.status(200).json({ data: rows });
+  } catch (error) {
+    res.status(400).json({ messsage: error });
+  }
+};
 
 
 
