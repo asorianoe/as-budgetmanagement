@@ -17,9 +17,10 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (Object.entries(authCtx.currentUser).length == 0) {
-      navigate('/Login', { replace: true });
-    }
+    console.log('ddd');
+    console.log(Object.entries(authCtx.currentUser));
+    console.log(authCtx.currentUser.first_name);
+    console.log('ddd');
     const getAllAccounts = async () => {
       const accounts = await getAccounts();
       setAccounts(accounts.data);
@@ -82,8 +83,8 @@ function Dashboard() {
                 <td style={{ textAlign: "right" }}>{account.BALANCE} {account.CURRENCY}</td>
                 <td>{format(parseISO(account.modified), "MMMM do, yyyy HH:mma")}</td>
                 <td> 
-                    <Button variant="success" onClick={() => handleIncrease(account.accountId,account.CURRENCY)}><BsArrowUpCircle/></Button>
-                    <Button variant="danger"  onClick={() => handleExpense (account.accountId,account.CURRENCY)}><BsArrowDownCircle/></Button>
+                    <Button variant="success" onClick={() => handleIncrease(account.accountId,account.CURRENCY)}><BsArrowUpCircle/></Button>&nbsp;
+                    <Button variant="danger"  onClick={() => handleExpense (account.accountId,account.CURRENCY)}><BsArrowDownCircle/></Button>&nbsp;
                     <Button variant="warning" onClick={() => handleTransfer (account.accountId)}><BsArrowRepeat/></Button>
                 </td>
               </tr>

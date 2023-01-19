@@ -2,10 +2,10 @@ import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import Container from 'react-bootstrap/Container';
 
-import { useContext } from 'react';
+import { useContext,useEffect, useState} from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { Routes ,Route, useNavigate} from 'react-router-dom';
+import { Routes ,Route, useNavigate, useLocation} from 'react-router-dom';
 import AuthContext from './context/auth-context';
 import AuthProvider from './context/AuthProvider';
 import Dashboard from './Components/Dashboard';
@@ -20,6 +20,24 @@ import ViewHistory from './Components/ViewHistory';
 function App() {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
+  const [loggedIn, setLoggedIn] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    let unsec = location.pathname ==='/Login' || location.pathname ==='/Register';
+    if (Object.entries(authCtx.currentUser).length === 0) {
+      if (!unsec){
+        navigate('/Login', { replace: true });
+      }
+      setLoggedIn(false);
+    }else {
+      if (unsec){
+        navigate('/', { replace: true });
+      }
+      setLoggedIn(true);
+    }
+
+  }, []);
 
   const HandleLogout = async () => {
     try {
@@ -30,21 +48,19 @@ function App() {
   };
 
   return (
-    <AuthProvider>
+      <>
       <div>
         <Navbar bg="primary" variant="dark">
           <Container>
             <Navbar.Brand href="/Dashboard">Budget Management</Navbar.Brand>
-            <Nav className="me-auto">
+            {Object.entries(authCtx.currentUser).length !== 0 &&<Nav className="me-auto">
               <Nav.Link href="/Dashboard">Dashboard</Nav.Link>
-              <Nav.Link href="/History">Transaction History</Nav.Link>
+              <Nav.Link href="/ViewHistory">Transaction History</Nav.Link>
             </Nav>
-            <Navbar.Text>
-              {authCtx.currentUser && <h2>Transfering from  {authCtx.currentUser.last_name} </h2>}
-
-              Signed in as: <a href="#login">{`Hello {authCtx.currentUser.first_name} ${authCtx.currentUser.last_name}`}  {authCtx.currentUser.last_name}</a>
-            </Navbar.Text>
-            <Nav.Link href="/Login" onClick={HandleLogout} >Logout</Nav.Link>
+            }
+            {Object.entries(authCtx.currentUser).length !== 0 &&<Navbar.Text style={{ color:"white"}}>
+              Signed in as: {authCtx.currentUser.first_name} {authCtx.currentUser.last_name} (<a href="#login" onClick={HandleLogout}>logout</a>)
+            </Navbar.Text>}
           </Container>
         </Navbar>
       </div>
@@ -63,9 +79,7 @@ function App() {
               }} />
         </Routes>
       </div>
-    </AuthProvider>
-
-
+      </>
   );
 }
 
