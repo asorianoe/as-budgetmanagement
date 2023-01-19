@@ -67,6 +67,7 @@ const AuthProvider = (props) => {
     return new Promise((resolve, reject) => {
       setCurrentUser({});
       removeCookie('auth_token');
+      console.log('dddd');
       resolve();
     });
   };

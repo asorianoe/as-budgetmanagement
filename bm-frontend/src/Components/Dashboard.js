@@ -5,23 +5,28 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Button from "react-bootstrap/Button";
 import { Table } from 'react-bootstrap';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { getAccounts, getTransactions} from "../service/AccountsService";
 import { BsArrowRepeat,BsArrowUpCircle,BsArrowDownCircle} from "react-icons/bs";
+import AuthContext from "../context/auth-context";
 
 function Dashboard() {
+  const authCtx = useContext(AuthContext);
   const [accounts, setAccounts] = useState([]);
   const [latestTx, setLatestTx] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (Object.entries(authCtx.currentUser).length == 0) {
+      navigate('/Login', { replace: true });
+    }
     const getAllAccounts = async () => {
       const accounts = await getAccounts();
       setAccounts(accounts.data);
     };
     getAllAccounts();
     const getLatestTransactions = async () => {
-      const tx = await getTransactions(null,null,null,6);
+      const tx = await getTransactions(null,null,null,null,6);
       setLatestTx(tx.data);
     };
     getLatestTransactions();
@@ -93,7 +98,7 @@ function Dashboard() {
           <h2> Latest Transactions</h2>
         </Col>
         <Col style={{ textAlign: "center" }}>
-            <Button variant="primary" onClick={() => handleViewHistory()}>View Tx History</Button>
+            <Button variant="primary" onClick={() => handleViewHistory()}>Transaction History</Button>
         </Col>
       </Row>
         <Col> 

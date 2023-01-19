@@ -1,6 +1,4 @@
 
-import { useCookies } from 'react-cookie';
-
 export const getAccounts = async () => {
     const cookie = getCookie('auth_token');
     const response = await fetch(
@@ -103,9 +101,9 @@ export const saveTransaction = async (accId, txType, txCat, txAmmount, txCurrenc
   return categories;
 };
 
-export const getTransactions  = async (accId,txCat,txDate,limit) => {
+export const getTransactions  = async (accId,txCat,txDate,txType,limit) => {
   const cookie = getCookie('auth_token');
-  var query = 'accId='+cleanParam(accId)+'&txCat='+cleanParam(txCat)+'&txDate='+cleanParam(txDate)+'&limit='+cleanParam(limit); 
+  var query = 'accId='+cleanParam(accId)+'&txCat='+cleanParam(txCat)+'&txDate='+cleanParam(txDate)+'&limit='+cleanParam(limit)+'&txType='+cleanParam(txType); 
   const response = await fetch(
   `${process.env.REACT_APP_BACKEND_BASE_URL}/tranfer?`+ query,
   {

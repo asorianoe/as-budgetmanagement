@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 import { useContext } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { Routes ,Route} from 'react-router-dom';
+import { Routes ,Route, useNavigate} from 'react-router-dom';
 import AuthContext from './context/auth-context';
 import AuthProvider from './context/AuthProvider';
 import Dashboard from './Components/Dashboard';
@@ -19,6 +19,16 @@ import ViewHistory from './Components/ViewHistory';
 
 function App() {
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const HandleLogout = async () => {
+    try {
+      await authCtx.logout();
+      navigate('/login', { replace: true });
+    } catch {
+    }
+  };
+
   return (
     <AuthProvider>
       <div>
@@ -28,12 +38,13 @@ function App() {
             <Nav className="me-auto">
               <Nav.Link href="/Dashboard">Dashboard</Nav.Link>
               <Nav.Link href="/History">Transaction History</Nav.Link>
-              <Nav.Link href="/Register">Register</Nav.Link>
-              <Nav.Link href="/Login">Login</Nav.Link>
             </Nav>
             <Navbar.Text>
+              {authCtx.currentUser && <h2>Transfering from  {authCtx.currentUser.last_name} </h2>}
+
               Signed in as: <a href="#login">{`Hello {authCtx.currentUser.first_name} ${authCtx.currentUser.last_name}`}  {authCtx.currentUser.last_name}</a>
             </Navbar.Text>
+            <Nav.Link href="/Login" onClick={HandleLogout} >Logout</Nav.Link>
           </Container>
         </Navbar>
       </div>

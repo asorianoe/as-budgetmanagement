@@ -12,16 +12,15 @@ import DatePicker from 'react-date-picker';
 function ViewHistory() {
     const [error, setError] = useState('');
     const [accounts, setAccounts] = useState([]);
-    const [currencies, setCurrencies] = useState([]);
     const [categories, setCategories] = useState([]);
     const [txTypes, setTxTypes] = useState([]);
-    const [disabledSubmit, setDisableSubmit] = useState(false);
     const [dateValue, setDateValue] = useState(false);
     const [transactions, setTransactions] = useState([]);
     const navigate = useNavigate();
     const accIdRef = useRef();
     const categorRef = useRef();
     const txType = useRef();
+    const dateRef = useRef();
 
     useEffect(() => {
         const getAllAccounts = async () => {
@@ -58,18 +57,26 @@ function ViewHistory() {
         finalDate=format(dateValue, "yyyyMMdd")
         console.log(finalDate);
       }
-      const tx = await getTransactions(accIdRef.current.value,categorRef.current.value,finalDate,null);
+      const tx = await getTransactions(accIdRef.current.value,categorRef.current.value,finalDate,txType.current.value,null);
       setTransactions(tx.data);
     };
-    
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setDisableSubmit(false);
+    const getCategoriesByType = async () => {
+      const categories = await getCategories(txType.current.value, 'ALL');
+      setCategories(categories.data);
+      categorRef.current.value='';
+      getLatestTransactions();
     };
-
-    function handleCancel() {
+   
+    function handleReturn() {
       navigate("/Dashboard");
+    }
+    function handleClean() {
+      categorRef.current.value='';
+      accIdRef.current.value='';
+      txType.current.value='';
+      setDateValue('');
+      getLatestTransactions();
     }
 
     return (
@@ -79,6 +86,9 @@ function ViewHistory() {
             <h2>Transaction History</h2>
           </Col>
           <Col style={{ textAlign: "center" }}>
+            <Button variant="primary" onClick={() => handleClean()}>Clean</Button>
+            &nbsp;&nbsp;&nbsp;
+            <Button variant="primary" onClick={() => handleReturn()}>Back</Button>
           </Col>
         </Row>
         <Row>
@@ -96,7 +106,7 @@ function ViewHistory() {
           <Col>
               <Form.Group id="txType">
                 <Form.Label>Transaction Type</Form.Label>
-                <Form.Select ref={txType} onChange={getLatestTransactions}>
+                <Form.Select ref={txType} onChange={getCategoriesByType}>
                       <option value=''></option>
                   {txTypes.map(typ=>{return(
                       <option value={typ.TX_TYPE} key={typ.TX_TYPE}>{typ.TX_TYPE_DESC}</option>
@@ -119,7 +129,7 @@ function ViewHistory() {
               <Form.Group id="date">
                 <Form.Label>Date</Form.Label> 
                 <br/>
-                <DatePicker onChange={setDateValue} value={dateValue} maxDate={new Date()} />
+                <DatePicker onChange={setDateValue} value={dateValue} maxDate={new Date()}  ref={dateRef} />
               </Form.Group>
           </Col>
         </Row>

@@ -83,10 +83,11 @@ module.exports.getTranfers = async (req, res, next) => {
                   accId:req.query.accId,
                   txCat:req.query.txCat, 
                   txDate:req.query.txDate, 
-                  limitRows:req.query.limit
+                  limitRows:req.query.limit,
+                  txType:req.query.txType
                 };
   try {
-    const { rows } = await accountDao.getTransfers(args);
+    const { rows } = await accountDao.getTransactions(args);
     res.status(200).json({ data: rows });
   } catch (error) {
     res.status(400).json({ messsage: error });

@@ -2,6 +2,9 @@ import { useRef, useContext, useState, useEffect } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
 import AuthContext from '../context/auth-context';
 import { Link, useNavigate } from 'react-router-dom';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 
 const Login = () => {
   const authCtx = useContext(AuthContext);
@@ -32,11 +35,18 @@ const Login = () => {
   };
 
   return (
-      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
-        <div className="w-100" style={{ maxWidth: '400px' }}>
+    <Container>
+        <Row style={{ marginTop:"30Px"}}>
+          <Col>
+            <h2>Login</h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            
           <Card>
             <Card.Body>
-              <h2 className="text-center mb-4">Register</h2>
+              
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
                 <Form.Group id="userId">
@@ -47,17 +57,22 @@ const Login = () => {
                   <Form.Label>Password</Form.Label>
                   <Form.Control type="password" ref={passwordRef} required />
                 </Form.Group>
-                <Button disabled={disabledSubmit} type="submit">
-                  Login
-                </Button>
+                <hr/>
+                  <div style={{marginLeft:"50%"}}>
+                    <Button disabled={disabledSubmit} type="submit">
+                      Login
+                    </Button>
+                  </div>
               </Form>
             </Card.Body>
           </Card>
           <div className="w-100 text-center mt-2">
-            Register new User <Link to="/login">Log In</Link>
+            Register new User <Link to="/Register">Register here</Link>
           </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Container>
+      
   );
 };
 

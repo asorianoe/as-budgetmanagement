@@ -1,5 +1,5 @@
 import { useRef, useContext, useState, useEffect } from 'react';
-import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { Form, Button, Card, Alert, Row, Col, Container} from 'react-bootstrap';
 import AuthContext from '../context/auth-context';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -43,12 +43,16 @@ const Register = () => {
   };
 
   return (
-    <>
-      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
-        <div className="w-100" style={{ maxWidth: '400px' }}>
+    <Container>
+        <Row style={{ marginTop:"30Px"}}>
+          <Col>
+            <h2>Register</h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
           <Card>
             <Card.Body>
-              <h2 className="text-center mb-4">Register</h2>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
                 <Form.Group id="first_name">
@@ -71,18 +75,21 @@ const Register = () => {
                   <Form.Label>Password Confirm</Form.Label>
                   <Form.Control type="password" ref={passwordConfirmRed} required/>
                 </Form.Group>
-                <Button disabled={disabledSubmit} className="w-100 mt-3" type="submit">
-                  Register
-                </Button>
+                <hr/>
+                <div style={{marginLeft:"50%"}}>
+                  <Button disabled={disabledSubmit} type="submit">
+                    Register
+                  </Button>
+                </div>
               </Form>
             </Card.Body>
           </Card>
-          <div className="w-100 text-center mt-2">
+          <div>
             Already a user? <Link to="/login">Log In</Link>
           </div>
-        </div>
-      </div>
-    </>
+          </Col>
+        </Row>
+      </Container>  
   );
 };
 
