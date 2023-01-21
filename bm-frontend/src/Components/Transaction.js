@@ -5,33 +5,43 @@ import { useNavigate } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-import { getCategories, getCurrencies, saveTransaction} from "../service/AccountsService";
+import { getCategories, getCurrencies, saveTransaction, getAccounts} from "../service/AccountsService";
+import CurrencyInput from "react-currency-input-field";
 
 function Transaction() {
-    const {accId, txType,curr} = useParams();
+    const {accId, txType} = useParams();
     const [error, setError] = useState('');
     const [categories, setCategories] = useState([]);
     const [currencies, setCurrencies] = useState([]);
+    const [mainAccount, setMainAccount] = useState('');
+    const [mainAccountCurr, setMainAccountCurr] =  useState('');
     const [disabledSubmit, setDisableSubmit] = useState(false);
+    const [ammountValue, setAmmountValue] = useState(null);
     const navigate = useNavigate();
     const categorRef = useRef();
-    const ammountRef = useRef();
     const currencyRef = useRef();
 
     useEffect(() => {
         const getTypeCategories = async () => {
           const categories = await getCategories(txType);
-          console.log(categories);
           setCategories(categories.data);
         };
         getTypeCategories();
         const getAllCurrencies = async () => {
           const currencies = await getCurrencies();
-          console.log(currencies);
           setCurrencies(currencies.data);
         };
         getAllCurrencies();
-    }, []);
+        const getAllAccounts = async () => {
+          const accounts = await getAccounts();
+          const mainAccountArr = accounts.data.filter(account => {
+            return account.accountId ===parseInt(accId);
+          }); 
+          setMainAccount(mainAccountArr[0].ALIAS);
+          setMainAccountCurr(mainAccountArr[0].CURRENCY);
+        };
+        getAllAccounts();
+    }, [accId, txType]);
     
 
     const handleSubmit = async (e) => {
@@ -39,7 +49,7 @@ function Transaction() {
       try {
         setError('');
         setDisableSubmit(true);
-        let finalAmmount =ammountRef.current.value * (txType==="INC"? 1:-1);
+        let finalAmmount =ammountValue * (txType==="INC"? 1:-1);
         await saveTransaction(accId,txType,categorRef.current.value,finalAmmount,currencyRef.current.value);
         return navigate('/Dashboard', { replace: true });
       } catch (e) {
@@ -57,7 +67,7 @@ function Transaction() {
       <Container>
         <Row style={{ marginTop:"30Px"}}>
           <Col>
-          <h2>Register {txType ==="INC"?"Income":"Expense"}</h2>
+          <h2>Register {txType ==="INC"?"Income":"Expense"} {mainAccount && <span> {mainAccount} ({mainAccountCurr})</span>}</h2>
           </Col>
           <Col style={{ textAlign: "center" }}>
           </Col>
@@ -78,11 +88,16 @@ function Transaction() {
                   </Form.Group>
                   <Form.Group id="ammount">
                     <Form.Label>Ammount</Form.Label>
-                    <Form.Control type="text" placeholder="0.00"  ref={ammountRef} required />
+                    <CurrencyInput className="form-control"
+                        placeholder="0.00"
+                        allowNegativeValue={false}
+                        decimalsLimit={2} 
+                        onValueChange={(value, name) => setAmmountValue (value)} required 
+                    />
                   </Form.Group>
                   <Form.Group id="currency">
                     <Form.Label>Currency</Form.Label>
-                    <Form.Select ref={currencyRef} value={curr}>
+                    <Form.Select ref={currencyRef} value={mainAccountCurr}>
                       {currencies.map(cur=>{return(
                          <option value={cur.CURRENCY} key={cur.CURRENCY}>{cur.DESCRIPTION}</option>
                       )})}

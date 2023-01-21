@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import { getAccounts, getCurrencies, saveTranfer} from "../service/AccountsService";
+import CurrencyInput from "react-currency-input-field";
 
 function Transfer() {
     const {accId} = useParams();
@@ -14,35 +15,33 @@ function Transfer() {
     const [mainAccountCurr, setMainAccountCurr] =  useState('');
     const [accounts, setAccounts] = useState([]);
     const [currencies, setCurrencies] = useState([]);
+    const [ammountValue, setAmmountValue] = useState(null);
     const [disabledSubmit, setDisableSubmit] = useState(false);
     const navigate = useNavigate();
     const transferToRef = useRef();
-    const ammountRef = useRef();
     const currencyRef = useRef();
 
     useEffect(() => {
         const getAllCurrencies = async () => {
           const currencies = await getCurrencies();
-          console.log(currencies);
           setCurrencies(currencies.data);
         };
         getAllCurrencies();
 
         const getAllAccounts = async () => {
           const accounts = await getAccounts();
-          console.log(accounts);
           const filtered = accounts.data.filter(account => {
-            return !(account.accountId == accId);
+            return account.accountId !== parseInt(accId);
           });
           setAccounts(filtered);
           const mainAccountArr = accounts.data.filter(account => {
-            return account.accountId ==accId;
+            return account.accountId ===parseInt(accId);
           }); 
           setMainAccount(mainAccountArr[0].ALIAS);
           setMainAccountCurr(mainAccountArr[0].CURRENCY);
         };
         getAllAccounts();
-    }, []);
+    }, [accId]);
     
 
     const handleSubmit = async (e) => {
@@ -50,7 +49,7 @@ function Transfer() {
       try {
         setError('');
         setDisableSubmit(true);
-        await saveTranfer(accId,transferToRef.current.value,ammountRef.current.value,currencyRef.current.value);
+        await saveTranfer(accId,transferToRef.current.value,ammountValue,currencyRef.current.value);
         return navigate('/Dashboard', { replace: true });
       } catch (e) {
         console.log(e);
@@ -90,11 +89,16 @@ function Transfer() {
                   </Form.Group>
                   <Form.Group id="ammount">
                     <Form.Label>Ammount</Form.Label>
-                    <Form.Control type="text" placeholder="0.00"  ref={ammountRef} required />
+                    <CurrencyInput className="form-control"
+                        placeholder="0.00"
+                        allowNegativeValue={false}
+                        decimalsLimit={2} 
+                        onValueChange={(value, name) => setAmmountValue (value)} required 
+                    />
                   </Form.Group>
                   <Form.Group id="currency">
                     <Form.Label>Currency</Form.Label>
-                    <Form.Select ref={currencyRef}>
+                    <Form.Select ref={currencyRef} value={mainAccountCurr}>
                       {currencies.map(cur=>{return(
                          <option value={cur.CURRENCY} key={cur.CURRENCY}>{cur.DESCRIPTION}</option>
                       )})}

@@ -38,8 +38,8 @@ module.exports.saveTransfer = ({ accId,toAccId,ammount, currency}) => {
 };
 
 
-module.exports.getTransactions = ({ accId,txCat,txDate,txType, limitRows}) => {
-  const bindings = {accId,txCat,txDate,txType,limitRows};
+module.exports.getTransactions = ({ accId,txCat,txDate,txType, limitRows, userId}) => {
+  const bindings = {accId,txCat,txDate,txType,limitRows, userId};
   const SQL_SELECT_CATEGORIES = `SELECT * FROM (
                                       SELECT
                                         tx.tx_id, tx.account_id accountId, ac.alias, ac.currency exg_curr,
@@ -51,7 +51,8 @@ module.exports.getTransactions = ({ accId,txCat,txDate,txType, limitRows}) => {
                                         inner join bm_transactions_type tt on (tt.tx_type = tx.tx_type)
                                         inner join bm_transactions_cat tc on (tx.tx_cat = tc.tx_cat)
                                       Where 
-                                        tx.account_id = nvl(:accId,tx.account_id)
+                                        user_id = :userId
+                                        AND tx.account_id = nvl(:accId,tx.account_id)
                                         AND tx.tx_cat = nvl(:txCat,tx.tx_cat)
                                         AND tx.tx_type = nvl(:txType,tx.tx_type)
                                         AND to_char(tx.tx_date,'YYYYMMdd') = nvl(:txDate,to_char(tx.tx_date,'YYYYMMdd'))

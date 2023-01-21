@@ -5,22 +5,17 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Button from "react-bootstrap/Button";
 import { Table } from 'react-bootstrap';
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { getAccounts, getTransactions} from "../service/AccountsService";
 import { BsArrowRepeat,BsArrowUpCircle,BsArrowDownCircle} from "react-icons/bs";
-import AuthContext from "../context/auth-context";
+
 
 function Dashboard() {
-  const authCtx = useContext(AuthContext);
   const [accounts, setAccounts] = useState([]);
   const [latestTx, setLatestTx] = useState([]);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   useEffect(() => {
-    console.log('ddd');
-    console.log(Object.entries(authCtx.currentUser));
-    console.log(authCtx.currentUser.first_name);
-    console.log('ddd');
     const getAllAccounts = async () => {
       const accounts = await getAccounts();
       setAccounts(accounts.data);
@@ -36,10 +31,10 @@ function Dashboard() {
 
 
   function handleIncrease(id,curr) {
-    navigate("/Transaction/"+id+"/INC/"+curr);
+    navigate("/Transaction/"+id+"/INC/");
   }
   function handleExpense(id,curr) {
-    navigate("/Transaction/"+id+"/EXP/"+curr);
+    navigate("/Transaction/"+id+"/EXP/");
   }
 
   function handleTransfer(id) {

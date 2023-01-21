@@ -1,20 +1,18 @@
-import { format , parseISO } from "date-fns";
+import { format , parseISO,  } from "date-fns";
 import { useRef, useState, useEffect } from 'react';
-import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { Form, Button} from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Table } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import { getAccounts, getCategories, getTransactions, getTypes} from "../service/AccountsService";
-import DatePicker from 'react-date-picker';
+
 
 function ViewHistory() {
-    const [error, setError] = useState('');
     const [accounts, setAccounts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [txTypes, setTxTypes] = useState([]);
-    const [dateValue, setDateValue] = useState(false);
     const [transactions, setTransactions] = useState([]);
     const navigate = useNavigate();
     const accIdRef = useRef();
@@ -31,7 +29,6 @@ function ViewHistory() {
 
         const getTypeCategories = async () => {
           const categories = await getCategories(null, 'ALL');
-          console.log(categories);
           setCategories(categories.data);
         };
         getTypeCategories();
@@ -52,10 +49,9 @@ function ViewHistory() {
 
     const getLatestTransactions = async () => {
       let finalDate=null;
-      console.log(dateValue);
-      if (dateValue){
-        finalDate=format(dateValue, "yyyyMMdd")
-        console.log(finalDate);
+      let initialDate = dateRef.current.value;
+      if (initialDate){
+        finalDate = initialDate.replaceAll("-","");
       }
       const tx = await getTransactions(accIdRef.current.value,categorRef.current.value,finalDate,txType.current.value,null);
       setTransactions(tx.data);
@@ -67,7 +63,7 @@ function ViewHistory() {
       categorRef.current.value='';
       getLatestTransactions();
     };
-   
+  
     function handleReturn() {
       navigate("/Dashboard");
     }
@@ -75,7 +71,7 @@ function ViewHistory() {
       categorRef.current.value='';
       accIdRef.current.value='';
       txType.current.value='';
-      setDateValue('');
+      dateRef.current.value='';
       getLatestTransactions();
     }
 
@@ -129,7 +125,7 @@ function ViewHistory() {
               <Form.Group id="date">
                 <Form.Label>Date</Form.Label> 
                 <br/>
-                <DatePicker onChange={setDateValue} value={dateValue} maxDate={new Date()}  ref={dateRef} />
+                <input type="date" className="form-control" onChange={getLatestTransactions} ref={dateRef}/>
               </Form.Group>
           </Col>
         </Row>

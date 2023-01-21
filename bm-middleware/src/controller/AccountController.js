@@ -84,7 +84,8 @@ module.exports.getTranfers = async (req, res, next) => {
                   txCat:req.query.txCat, 
                   txDate:req.query.txDate, 
                   limitRows:req.query.limit,
-                  txType:req.query.txType
+                  txType:req.query.txType,
+                  userId: req.person.userId
                 };
   try {
     const { rows } = await accountDao.getTransactions(args);

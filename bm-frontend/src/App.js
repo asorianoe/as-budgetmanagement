@@ -2,12 +2,11 @@ import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import Container from 'react-bootstrap/Container';
 
-import { useContext,useEffect, useState} from 'react';
+import { useContext,useEffect} from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Routes ,Route, useNavigate, useLocation} from 'react-router-dom';
 import AuthContext from './context/auth-context';
-import AuthProvider from './context/AuthProvider';
 import Dashboard from './Components/Dashboard';
 import Transaction from './Components/Transaction';
 import Register from './Components/Register';
@@ -20,7 +19,6 @@ import ViewHistory from './Components/ViewHistory';
 function App() {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -29,15 +27,13 @@ function App() {
       if (!unsec){
         navigate('/Login', { replace: true });
       }
-      setLoggedIn(false);
     }else {
       if (unsec){
         navigate('/', { replace: true });
       }
-      setLoggedIn(true);
     }
 
-  }, []);
+  }, [location,authCtx,navigate]);
 
   const HandleLogout = async () => {
     try {
@@ -68,7 +64,7 @@ function App() {
         <Routes>                
              <Route path='/Dashboard' element={<Dashboard/>}/>  
              <Route path='/ViewHistory' element={<ViewHistory/>}/>  
-             <Route path='/Transaction/:accId/:txType/:curr' element={<Transaction/>} />  
+             <Route path='/Transaction/:accId/:txType/' element={<Transaction/>} />  
              <Route path='/Transfer/:accId' element={<Transfer/>} />  
              <Route path='/CreateAccount' element={<CreateAccount/>} />  
              <Route path='/Register' element={<Register/>} />  
