@@ -32,7 +32,6 @@ module.exports.saveTransaction = ({ accId,txType,txCat, txAmmount, txCurrency}) 
 
 module.exports.saveTransfer = ({ accId,toAccId,ammount, currency}) => {
   const bindings = {accId,toAccId,ammount, currency};
-  console.log(bindings);
   const SQL_SELECT_CATEGORIES = `CALL bm_transfer(:accId, :toAccId, :ammount, :currency)`;
   return pool(SQL_SELECT_CATEGORIES, bindings,{ autoCommit: true });
 };

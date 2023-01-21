@@ -80,7 +80,7 @@ function Dashboard() {
                 <td> 
                     <Button variant="success" onClick={() => handleIncrease(account.accountId,account.CURRENCY)}><BsArrowUpCircle/></Button>&nbsp;
                     <Button variant="danger"  onClick={() => handleExpense (account.accountId,account.CURRENCY)}><BsArrowDownCircle/></Button>&nbsp;
-                    <Button variant="warning" onClick={() => handleTransfer (account.accountId)}><BsArrowRepeat/></Button>
+                    {accounts.length > 1 && <Button variant="warning" onClick={() => handleTransfer (account.accountId)}><BsArrowRepeat/></Button>}
                 </td>
               </tr>
             )})}
