@@ -1,0 +1,24 @@
+services:
+  frontend:
+    image: bm-frontend:latest
+    ports:
+      - 8080:80
+    env_file:
+      - ./bm-frontend/.env
+  backend:
+    image: bm-middleware:latest
+    ports:
+      - 3000:3000
+    env_file:
+      - ./bm-middleware/.env
+    restart: always
+  bmdatabase:
+    image: gvenzl/oracle-xe:21.3.0
+    ports:
+      - 1521:1521
+    env_file:
+      - ./bm-database/.env
+    volumes:
+      - ./bm-database/init:/container-entrypoint-initdb.d # Script inicial
+volumes:
+  oradata:
