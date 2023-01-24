@@ -1,0 +1,7 @@
+namespace: as-budgetmanagement
+
+resources:
+  - database.yaml
+  - middleware.yaml
+  - frontend.yaml
+  - namespace.yaml

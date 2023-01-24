@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: middleware-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: middleware
+  ports:
+  - port: 3000
+    targetPort: 3200
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: middleware
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: middleware
+  template:
+    metadata:
+      labels:
+        app: middleware
+    spec:
+      containers:
+      - name: middleware
+        image: asorianoti/bm-middleware:latest
+        env:
+        - name: SERVER_PORT
+          value: "3200"
+        - name: ORACLE_USER
+          value: bmuser
+        - name: ORACLE_PASS
+          value: bmpass
+        - name: ORACLE_CONNSTR
+          value: database-service:1521/xepdb1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m" # 1/10
+        ports:
+        - containerPort: 3800

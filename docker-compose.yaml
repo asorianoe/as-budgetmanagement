@@ -1,12 +1,12 @@
 services:
   frontend:
-    image: bm-frontend:latest
+    image: asorianoti/bm-frontend:latest
     ports:
       - 8080:80
     env_file:
       - ./bm-frontend/.env
   backend:
-    image: bm-middleware:latest
+    image: asorianoti/bm-middleware:latest
     ports:
       - 3000:3200
     env_file:
@@ -19,6 +19,6 @@ services:
     env_file:
       - ./bm-database/.env
     volumes:
-      - ./bm-database/init:/container-entrypoint-initdb.d # Script inicial
+      - ./bm-database/init:/container-entrypoint-initdb.d
 volumes:
   oradata:
